@@ -5,7 +5,7 @@
             <v-col cols="12" sm="6" md="4" lg="4" class="mt-10">
                 <v-card class="mt-5">
                     <template>
-                        <img :src="'/img/blog-login.png'" class="imgAdmin"></v-img>
+                        <v-img :src="'/img/blog-login.png'" class="imgAdmin"></v-img>
                     </template>
                     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                         {{ status }}

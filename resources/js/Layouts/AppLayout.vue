@@ -1,7 +1,6 @@
 <template>
     <div>
         <jet-banner />
-
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -9,20 +8,21 @@
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="flex-shrink-0 flex items-center">
+                           
+                            <v-row class="flex-shrink-0 flex items-center">
                                 <inertia-link :href="route('dashboard')">
-                                    <img :src="'/img/settings.png'" width="55" class="ml-5"></v-img>
+                                    <v-img :src="'/img/settings.png'" width="55" class="ml-10"></v-img>
                                 </inertia-link>
-                            </div>
-
+                            </v-row>
+                       
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                    <span><b>Home</b></span>
                                 </jet-nav-link>
                             </div>
                         </div>
-
+                       
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="ml-3 relative">
                                 <!-- Teams Dropdown -->

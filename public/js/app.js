@@ -37446,50 +37446,55 @@ var render = function () {
               { staticClass: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
               [
                 _c("div", { staticClass: "flex justify-between h-16" }, [
-                  _c("div", { staticClass: "flex" }, [
-                    _c(
-                      "div",
-                      { staticClass: "flex-shrink-0 flex items-center" },
-                      [
-                        _c(
-                          "inertia-link",
-                          { attrs: { href: _vm.route("dashboard") } },
-                          [
-                            _c("img", {
-                              staticClass: "ml-5",
-                              attrs: { src: "/img/settings.png", width: "55" },
-                            }),
-                          ]
-                        ),
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "hidden space-x-8 sm:-my-px sm:ml-10 sm:flex",
-                      },
-                      [
-                        _c(
-                          "jet-nav-link",
-                          {
-                            attrs: {
-                              href: _vm.route("dashboard"),
-                              active: _vm.route().current("dashboard"),
+                  _c(
+                    "div",
+                    { staticClass: "flex" },
+                    [
+                      _c(
+                        "v-row",
+                        { staticClass: "flex-shrink-0 flex items-center" },
+                        [
+                          _c(
+                            "inertia-link",
+                            { attrs: { href: _vm.route("dashboard") } },
+                            [
+                              _c("v-img", {
+                                staticClass: "ml-10",
+                                attrs: {
+                                  src: "/img/settings.png",
+                                  width: "55",
+                                },
+                              }),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "hidden space-x-8 sm:-my-px sm:ml-10 sm:flex",
+                        },
+                        [
+                          _c(
+                            "jet-nav-link",
+                            {
+                              attrs: {
+                                href: _vm.route("dashboard"),
+                                active: _vm.route().current("dashboard"),
+                              },
                             },
-                          },
-                          [
-                            _vm._v(
-                              "\n                                Dashboard\n                            "
-                            ),
-                          ]
-                        ),
-                      ],
-                      1
-                    ),
-                  ]),
+                            [_c("span", [_c("b", [_vm._v("Home")])])]
+                          ),
+                        ],
+                        1
+                      ),
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -39177,7 +39182,7 @@ var render = function () {
                     { staticClass: "mt-5" },
                     [
                       [
-                        _c("img", {
+                        _c("v-img", {
                           staticClass: "imgAdmin",
                           attrs: { src: "/img/blog-login.png" },
                         }),
