@@ -14,11 +14,13 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |w
 */
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Auth/Login');
+    });
 
-Route::get('/', function () {
-    return Inertia::render('test');
+    Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+    
 });
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
