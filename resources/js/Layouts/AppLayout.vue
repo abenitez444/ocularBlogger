@@ -18,7 +18,17 @@
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    <span><b>Home</b></span>
+                                     <v-btn
+                                        class="mx-3"
+                                        fab
+                                        medium
+                                        color="#303030"
+                                        title="Panel de configuración."
+                                        >
+                                        <v-icon color="#FFFFFF">
+                                            mdi-cog-transfer
+                                        </v-icon>
+                                    </v-btn>
                                 </jet-nav-link>
                             </div>
                         </div>
