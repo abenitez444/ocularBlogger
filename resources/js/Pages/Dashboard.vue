@@ -9,7 +9,7 @@
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <post />
+                    <index-setting />
                 </div>
             </div>
         </div>
@@ -18,12 +18,12 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    import Post from '@/Pages/Admin/Post/Post'
+    import indexSetting from '@/Pages/Admin/Panel/index-setting'
 
     export default {
         components: {
             AppLayout,
-            Post,
+            indexSetting,
         },
     }
 </script>
