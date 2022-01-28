@@ -32,3 +32,7 @@ use Inertia\Inertia;
     Route::middleware(['auth:sanctum', 'verified'])->get('/publications', function () {
         return Inertia::render('Publications/Index');
     })->name('publications');
+
+    Route::middleware(['auth:sanctum', 'verified'])->get('/authors', function () {
+        return Inertia::render('Users/Index');
+    })->name('users');

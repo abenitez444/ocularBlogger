@@ -26,8 +26,8 @@
                     <v-row>
                     <v-img
                     height="100%"
-                    :src="previewAvatar"
-                      class="mx-auto"
+                    :src="previewImage"
+                    class="mx-auto"
                     max-width="300"
                     >
                     <v-row
@@ -46,10 +46,10 @@
                             dark
                         >
                             <v-list-item-content>
-                            <v-list-item-title class="text-h5 font-weight-bold">
+                            <v-list-item-title class="text-h5 font-weight-bold" style="color:#F4FF03;">
                                 Alejandro Benitez
                             </v-list-item-title>
-                            <v-list-item-subtitle>Autor Básico</v-list-item-subtitle>
+                            <v-list-item-subtitle style="color:#F4FF03;"><b>Autor Administrador</b></v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
                         </v-col>
@@ -64,13 +64,13 @@
                                 prepend-icon="mdi-camera"
                                 label="Cargar imagen"
                                 type="file"
-                                @change="setAvatar"
+                                @change="setImage"
                             ></v-file-input>
                         </v-col>
                     </v-row>
                 </form>
                 <v-row justify="center">
-                    <v-col cols="12" md="10">
+                    <v-col cols="12" md="10" lg="10">
                         <v-text-field
                           v-model="form.title"
                           :rules="validatepublications.publicationsRules"
@@ -118,12 +118,18 @@ export default {
     },
     data() {
         return {
-            previewAvatar:'',
+          
+            previewImage:'',
+            image:'',
             loading: true,
             data: {},
             total: 0,
             max: 0,
-            form: {},
+            form: {
+                title:'',
+                categories_id:1,
+                description:''
+            },
             headers: [{
                     text: 'Titulo',
                     value: 'title',
@@ -156,20 +162,37 @@ export default {
             publications: [],
             validatepublications: {
                 publicationsRules: [
-                    v => !!v || '* La publicación es requerida.',
-                    v => (v && v.length <= 15) || '* La publicación debe contener máximo 15 caracteres.',
-                    v => (v && v.length >= 3) || '* La publicación debe contener mínimo 3 caracteres.'
+                    v => !!v || '* El título de la publicación es requerida.',
+                    v => (v && v.length <= 50) || '* El título debe contener máximo 50 caracteres.',
+                    v => (v && v.length >= 3) || '* El título debe contener mínimo 3 caracteres.'
+                ],
+                categoriesRules: [
+                    v => !!v || '* La categoría de la publicación es requerida.',
                 ],
             }
         }
     },
     mounted(){
         // Image of publication for default //
-        if(!this.previewAvatar) this.previewAvatar =  '/img/settings.png';
+        if(!this.previewImage) this.previewImage =  '/img/settings.png';
     },
     methods: {
-        setAvatar(){
-            console.log("Imagen");
+        setImage(e){
+            this.image = e;
+            this.previewImage = URL.createObjectURL(e);
+        },
+        saveImage()
+        {
+          let formElement = document.getElementById("formImg");
+          let formImg = new FormData(formElement);
+          formImg.append('file', this.image);
+          const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+          }
+          console.log(formImg)
+        //   this.$inertia.post(route('application.avatar.upload'), formImg, config);
         },
         //   getStudy(options)
         //   {
@@ -202,6 +225,9 @@ export default {
 
         saveStudy() {
             if (this.$refs.form.validate()) {
+                //this.saveImage()
+                this.previewImage = this.image
+                console.log(this.form)
                 //   axios.post(route('config.storeStudy'), this.form)
                 //   .then(() => {
                 // this.$swal.fire({
@@ -214,14 +240,7 @@ export default {
                 //     this.getStudy(this.$refs.dataTable.options);
                 //     this.$refs.dataTable.dialog = false;
                 //   })
-                this.$swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Solicitud realizada exitosamente.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                console.log("sisa")
+            
                 this.$refs.dataTable.dialog = false;
             } else {
                 this.$toast.open({

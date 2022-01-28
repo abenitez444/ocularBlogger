@@ -18,7 +18,7 @@
               :headers="headers"
               :total="total"
               :form="form"
-              @save="saveStudy"
+              @save="saveCategories"
               @delete="deleteStudy"
               ref="dataTable">
               <template v-slot:formContainer>
@@ -66,7 +66,10 @@ export default {
             data: {},
             total: 0,
             max: 0,
-            form: {},
+            form: {
+              name:'',
+              description:''
+            },
             headers: [{
                     text: 'Categoría',
                     value: 'name',
@@ -126,8 +129,9 @@ export default {
         //     this.form = study;
         //   },
 
-        saveStudy() {
+        saveCategories() {
             if (this.$refs.form.validate()) {
+                console.log(this.form);
                 //   axios.post(route('config.storeStudy'), this.form)
                 //   .then(() => {
                 // this.$swal.fire({
@@ -140,14 +144,13 @@ export default {
                 //     this.getStudy(this.$refs.dataTable.options);
                 //     this.$refs.dataTable.dialog = false;
                 //   })
-                this.$swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Solicitud realizada exitosamente.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                console.log("sisa")
+                // this.$swal.fire({
+                //     position: 'center',
+                //     icon: 'success',
+                //     title: 'Solicitud realizada exitosamente.',
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // })
                 this.$refs.dataTable.dialog = false;
             } else {
                 this.$toast.open({

@@ -18,7 +18,7 @@
                         
                                 <!-- Navigation Links -->
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                    <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                                    <jet-nav-link :href="route('users')" :active="route().current('dashboard')">
                                         <div class="block px-4 py-2 text-xs text-dark-400">
                                         <span><b>Usuarios</b></span>
                                         </div>
