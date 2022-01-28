@@ -153,7 +153,6 @@ export default {
                 onFinish: () => this.form.reset('password', 'password_confirmation'),
           })
         },
-        
         deleteStudy(item) {
             axios.delete(route('config.deleteStudy', {
                     id: item.id

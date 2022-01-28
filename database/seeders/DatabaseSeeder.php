@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         /** Class seeder (Insert user admin) **/
         $this->call(UserSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(RolSeeder::class);
     }
 }
