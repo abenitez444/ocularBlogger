@@ -18,8 +18,9 @@
               :headers="headers"
               :total="total"
               :form="form"
-              @save="saveStudy"
-              @delete="deleteStudy"
+              @getData="allPublications"
+              @save="savePublications"
+              @delete="deletePublications"
               ref="dataTable">
               <template v-slot:formContainer>
                <form enctype="multipart/form-data" id="formImg">
@@ -81,7 +82,10 @@
                     </v-col>
                   <v-col cols="12" md="10" class="mb-5">
                     <v-autocomplete
-                        v-model="form.categories_id"
+                        v-model="form.category_id"
+                        :items="categories"
+                        item-value="id"
+                        item-text="name"
                         label="Seleccione"
                         required
                         >
@@ -125,10 +129,14 @@ export default {
             data: {},
             total: 0,
             max: 0,
+            categories:[],
+            publications:[],
             form: {
                 title:'',
-                categories_id:1,
-                description:''
+                user_id:null,
+                category_id:'',
+                description:'',
+                create_at:''
             },
             headers: [{
                     text: 'Titulo',
@@ -137,12 +145,12 @@ export default {
                 },
                 {
                     text: 'Autor',
-                    value: 'user',
+                    value: 'user_id',
                     sortable: false
                 },
                 {
                     text: 'Categoría',
-                    value: 'categories_id',
+                    value: 'category_id',
                     sortable: false
                 },
                 {
@@ -150,16 +158,10 @@ export default {
                     value: 'description',
                     sortable: false
                 },
-                {
-                    text: 'Fecha',
-                    value: 'date_publication',
-                    sortable: false
-                },
             ],
             filter: {
                 search: '',
             },
-            publications: [],
             validatepublications: {
                 publicationsRules: [
                     v => !!v || '* El título de la publicación es requerida.',
@@ -175,71 +177,74 @@ export default {
     mounted(){
         // Image of publication for default //
         if(!this.previewImage) this.previewImage =  '/img/settings.png';
+        this.getCategories();
     },
     methods: {
+        allPublications(options)
+        {
+          this.$refs.dataTable.loading = true;
+          this.filter.perPage = options.itemsPerPage;
+          axios.post(route('allPublication', {
+            page: options.page,
+          }), this.filter)
+          .then((response) => {
+            if(this.filter.perPage > 0)
+            {
+              this.publications =  response.data.data;
+              this.total = response.data.total;
+            }
+            else
+            {
+              this.publications =  response.data;
+              this.total = response.data.length;
+            }
+              this.$refs.dataTable.loading = false;
+          })
+        },
+        getCategories(){
+            axios.get(route('getCategory'))
+            .then((res) => {
+            this.categories = res.data
+            dd(res.data)
+            console.log(res.data)
+            })
+            .catch((error) => {
+            console.log(error)
+            })
+        },
         setImage(e){
             this.image = e;
             this.previewImage = URL.createObjectURL(e);
         },
-        saveImage()
+        saveImage(user_id)
         {
           let formElement = document.getElementById("formImg");
           let formImg = new FormData(formElement);
           formImg.append('file', this.image);
+          formImg.append('user_id', user_id);
           const config = {
             headers: {
                 'content-type': 'multipart/form-data'
             }
-          }
-          console.log(formImg)
-        //   this.$inertia.post(route('application.avatar.upload'), formImg, config);
+        }
+         this.$inertia.post(route('upload'), formImg, config);
         },
-        //   getStudy(options)
-        //   {
-        //     this.$refs.dataTable.loading = true;
-        //     this.filter.perPage = options.itemsPerPage;
-        //     axios.post(route('config.getStudy', {
-        //       page: options.page,
-        //     }), this.filter)
-        //     .then( (response) => {
-        //       if(this.filter.perPage > 0)
-        //       {
-        //         this.studies =  response.data.data;
-        //         this.total = response.data.total;
-
-        //       }
-        //       else
-        //       {
-        //         this.studies =  response.data;
-        //         this.total = response.data.length;
-
-        //       }
-        //         this.$refs.dataTable.loading = false;
-        //     })
-        //   },
-        //   editStudy(study)
-        //   {
-        //     this.$refs.form.resetValidation()
-        //     this.form = study;
-        //   },
-
-        saveStudy() {
+        savePublications() {
             if (this.$refs.form.validate()) {
-                //this.saveImage()
+                this.saveImage()
                 this.previewImage = this.image
-                console.log(this.form)
-                //   axios.post(route('config.storeStudy'), this.form)
-                //   .then(() => {
-                // this.$swal.fire({
-                //   position: 'center',
-                //   icon: 'success',
-                //   title: 'Solicitud realizada exitosamente.',
-                //   showConfirmButton: false,
-                //   timer: 1500
-                // })
-                //     this.getStudy(this.$refs.dataTable.options);
-                //     this.$refs.dataTable.dialog = false;
-                //   })
+                  axios.post(route('savePublication'), this.form)
+                  .then(() => {
+                this.$swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: 'Solicitud realizada exitosamente.',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+                    this.getCategories(this.$refs.dataTable.options);
+                    this.$refs.dataTable.dialog = false;
+                  })
             
                 this.$refs.dataTable.dialog = false;
             } else {
@@ -250,20 +255,20 @@ export default {
                 });
             }
         },
-        deleteStudy(item) {
-            axios.delete(route('config.deleteStudy', {
-                    id: item.id
-                }))
-                .then(() => {
-                    this.$swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'El registro se eliminó exitosamente.',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.getStudy(this.$refs.dataTable.options);
+        deletePublications(item) {
+          axios.delete(route('config.deleteStudy', {
+                id: item.id
+            }))
+            .then(() => {
+                this.$swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'El registro se eliminó exitosamente.',
+                    showConfirmButton: false,
+                    timer: 1500
                 })
+                this.getCategories(this.$refs.dataTable.options);
+            })
         }
     }
 }

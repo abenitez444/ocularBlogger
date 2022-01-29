@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Roles\RolController;
+use App\Http\Controllers\Publications\PublicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,3 +63,17 @@ use App\Http\Controllers\Roles\RolController;
         Route::delete('/roles/delete/{id}',[RolController::Class,'deleteRoles'])->name('deleteCategory');
     });
     /**===================================**/
+
+    /** METHODS HTTP IN MODULO PUBLICATION **/
+    Route::prefix('/dashboard')->group(function () {
+        Route::post('get-publications',[PublicationController::Class,'allPublications'])->name('allPublication');
+    });
+    Route::prefix('/dashboard')->group(function () {
+        Route::get('select/categories',[PublicationController::Class,'getCategories'])->name('getCategory');
+    });
+    Route::prefix('/dashboard')->group(function () {
+        Route::post('save',[PublicationController::Class,'savePublications'])->name('savePublication');
+    });
+    Route::prefix('/dashboard')->group(function () {
+        Route::post('/image/upload', [PublicationController::class, 'uploadImages'])->name('upload');
+    });
