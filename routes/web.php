@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Roles\RolController;
 use App\Http\Controllers\Publications\PublicationController;
+use App\Http\Controllers\Permission\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +18,13 @@ use App\Http\Controllers\Publications\PublicationController;
 | contains the "web" middleware group. Now create something great!
 |w
 */
-
+    /** ==== Route Login ==== **/
     Route::get('/', function () {  return Inertia::render('Admin/Login'); })->name('login.close');
-
     Route::prefix('miblog')->group(function () {
         Route::get('/admin', function () { return Inertia::render('Admin/Login'); });
     });        
+    /** ===================== **/
+
     /** Protection in routes for sanctum **/   
     Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -36,44 +38,32 @@ use App\Http\Controllers\Publications\PublicationController;
     Route::middleware(['auth:sanctum', 'verified'])->get('/authors', function () {
         return Inertia::render('Users/Index');
     })->name('users');
-
-    /** METHODS HTTP IN MODULO CATEGORIES **/
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('get-categories',[CategoryController::Class,'allCategories'])->name('allCategory');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('save',[CategoryController::Class,'saveCategories'])->name('saveCategory');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::delete('/categories/delete/{id}',[CategoryController::Class,'deleteCategory'])->name('deleteCategory');
-    });
-    /**===================================**/
-
-    /** METHODS HTTP IN MODULO ROLES **/
     Route::middleware(['auth:sanctum', 'verified'])->get('/roles', function () {
         return Inertia::render('Roles/Index');
     })->name('roles');
+    /**===================================**/
+
+    /** METHODS HTTP IN MODULOS **/
     Route::prefix('/dashboard')->group(function () {
-        Route::post('get-roles',[RolController::Class,'allRoles'])->name('allRol');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('save',[RolController::Class,'saveRoles'])->name('saveRol');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::delete('/roles/delete/{id}',[RolController::Class,'deleteRoles'])->name('deleteCategory');
+        /** ==== Categories ==== **/
+        Route::post('table-categories',[CategoryController::Class,'tableCategories'])->name('table.category');
+        Route::post('save-categories',[CategoryController::Class,'saveCategories'])->name('save.category');
+        Route::delete('/categories/delete/{id}',[CategoryController::Class,'deleteCategories'])->name('delete.category');
+        /** ==== Roles ==== **/
+        Route::post('table-roles',[RolController::Class,'tableRoles'])->name('table.rol');
+        Route::post('save-rol',[RolController::Class,'saveRoles'])->name('save.rol');
+        Route::delete('/roles/delete/{id}',[RolController::Class,'deleteRoles'])->name('delete.roles');
+        /** ==== Publications ==== **/
+        Route::post('get-publications',[PublicationController::Class,'tablePublications'])->name('table.publication');
+        Route::get('select/categories',[PublicationController::Class,'selectCategories'])->name('select.category');
+        Route::post('save',[PublicationController::Class,'savePublications'])->name('save.publication');
+        Route::get('/detail/{id}', [PublicationController::Class,'showDetail'])->name('show.publication');
+        Route::post('/image/upload', [PublicationController::class, 'uploadImages'])->name('upload.image');
+      
     });
     /**===================================**/
 
-    /** METHODS HTTP IN MODULO PUBLICATION **/
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('get-publications',[PublicationController::Class,'allPublications'])->name('allPublication');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::get('select/categories',[PublicationController::Class,'getCategories'])->name('getCategory');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('save',[PublicationController::Class,'savePublications'])->name('savePublication');
-    });
-    Route::prefix('/dashboard')->group(function () {
-        Route::post('/image/upload', [PublicationController::class, 'uploadImages'])->name('upload');
-    });
+    
+    
+    
+    

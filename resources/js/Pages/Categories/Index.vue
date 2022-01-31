@@ -1,11 +1,11 @@
 <template>
-<app-layout>
-  <v-container
+  <app-layout>
+    <v-container
     id="dashboard"
     fluid
     tag="section">
     <v-row class="justify-center">
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="10">
         <v-col cols="12" md="12">
           <v-form
             ref="form"
@@ -17,7 +17,7 @@
               :headers="headers"
               :total="total"
               :form="form"
-              @getData="allCategory"
+              @getData="tableCategories"
               @save="saveCategory"
               @edit="editCategory"
               @delete="deleteCategory"
@@ -107,11 +107,11 @@ export default {
     }
   },
   methods: {
-    allCategory(options)
+    tableCategories(options)
     {
       this.$refs.dataTable.loading = true;
       this.filter.perPage = options.itemsPerPage;
-      axios.post(route('allCategory', {
+      axios.post(route('table.category', {
         page: options.page,
       }), this.filter)
       .then((response) => {
@@ -130,24 +130,17 @@ export default {
     },
     saveCategory() {
       if(this.$refs.form.validate()) {
-          axios.post(route('saveCategory'), this.form)
+          axios.post(route('save.category'), this.form)
         .then(() => {
           this.$swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Solicitud realizada exitosamente.',
           showConfirmButton: false,
-          timer: 3000
+          timer: 1500
         })
-          this.allCategory(this.$refs.dataTable.options);
+          this.tableCategories(this.$refs.dataTable.options);
           this.$refs.dataTable.dialog = false;
-        })
-          this.$swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Solicitud realizada exitosamente.',
-          showConfirmButton: false,
-          timer: 3000
         })
       }else {
           this.$toast.open({
@@ -163,7 +156,7 @@ export default {
       this.form = category;
     },
     deleteCategory(item) {
-      axios.delete(route('deleteCategory', {
+      axios.delete(route('delete.category', {
           id: item.id
       }))
       .then(() => {
@@ -174,7 +167,7 @@ export default {
             showConfirmButton: false,
             timer: 1500
         })
-        this.allCategory(this.$refs.dataTable.options);
+        this.tableCategories(this.$refs.dataTable.options);
       })
     }
   }

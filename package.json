@@ -29,6 +29,7 @@
         "vue-toast-notification": "^0.6.2"
     },
     "dependencies": {
+        "moment": "^2.29.1",
         "vuetify": "^2.6.3"
     }
 }

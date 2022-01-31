@@ -14,16 +14,17 @@ class RolSeeder extends Seeder
      */
     public function run()
     {
-         /** Insert roles for default **/
-         DB::table('roles')->insert([
+        /* Insert roles for default */ 
+        DB::table('roles')->insert([
             [
                 'name' => 'Administrador',
                 'description' => 'Control total.'
             ],
             [
-                'name' => 'Blog',
+                'name' => 'Invitado',
                 'description' => 'Visualización por permisos.'
             ],
         ]);
+        
     }
 }

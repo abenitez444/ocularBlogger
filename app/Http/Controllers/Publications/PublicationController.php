@@ -8,22 +8,23 @@ use App\Models\Publication;
 use App\Models\User;
 use App\Models\Category;
 use Inertia\Inertia;
+use Carbon\Carbon;
 
 class PublicationController extends Controller
 {   
-    public function allPublications(Request $request)
+    public function tablePublications(Request $request)
     {
         if ($request->perPage > 0)
-        {
-            $data = Publication::orderBy('created_at', 'desc')->paginate($request->perPage);
+        {   
+            $data = Publication::with('category', 'author')->whereDate('created_at', date('Y-m-d'))->paginate($request->perPage);
         }
         else
         {
-            $data = Publication::orderBy('created_at', 'desc')->get();
+            $data = Publication::with('category')->orderBy('created_at', 'desc')->with('category')->get(); 
         }
         return response()->json($data);
     }
-    public function getCategories(Request $request)
+    public function selectCategories(Request $request)
     {
         if ($request->perPage > 0)
         {
@@ -38,40 +39,47 @@ class PublicationController extends Controller
     public function uploadImages(Request $request)
     {
        
-        $user = User::find($request[0]->user_id);
-
+        $publication_id = $request->publication_id; 
+        
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $ext = $file->extension();
-            $path = '/storage/users/'.$user[0];
+            $path = '/storage/publication/'.$publication_id;
 
             if ($file->move(public_path($path), "image.$ext")) {
-
-                // $application = Application::find($user->application->id);
-                $user->image = "$path/image.$ext";
-                $user->save();
-
-               return response()->json($request->user_id,200);
-
+                $form = Publication::find($publication_id);
+                $form->image = "$path/image.$ext";
+                $form->save();
+                return response()->json($publication_id,200);
             }
         }
-
-        return response()->json($request->user_id,200);
+    
     }
     public function savePublications(Request $request){
       
         try {
-
-            $publication = Publication::firstOrNew([
-                'id' => $request->id
-            ]);
-            $publication->fill($request->all());
-            $publication->save();
-    
-            return response()->json($publication);
-
+            $form_obj = (object) $request->data;
+            $form = new Publication();
+            $form->title = $form_obj->title;
+            $form->category_id = $form_obj->category_id;
+            $form->summary = $form_obj->summary;
+            $form->description = $form_obj->description;
+            $form->user_id = auth()->user()->id;
+            $form->save();
+            
+            return response()->json($form->id);
+           
         }catch (\Throwable $th) {
             throw $th;
         }
+    }
+    public function showDetail($id)
+    {
+        $publicationData = Publication::with('category', 'author')
+        ->where('publication.id', $id)->first();
+          
+           $data = ['data'=>$publicationData];
+
+           return Inertia::render('Publications/Detail',$data);
     }
 }

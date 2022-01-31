@@ -1,8 +1,14 @@
 <template>
     <app-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Bienvenido  <i class="mdi mdi-account-cog"></i> 
+        <template #header v-if="$page.props.user.rol_id === 1">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight ml-6 flex justify-left">
+                <b class="mt-1">Bienvenido</b>
+                 <span v-if="$page.props.jetstream.managesProfilePhotos">
+                    <button>
+                        <img class="h-9 w-9 rounded-full object-cover ml-2" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
+                    </button>
+                </span>
+                 <b class="ml-1 mt-1">{{$page.props.user.name}}</b> 
             </h2>
         </template>
 

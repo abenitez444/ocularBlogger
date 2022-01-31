@@ -16,10 +16,11 @@ class CreatePublicationsTable extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->string('image')->nullable();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->foreignId('category_id')->nullable();
-            $table->string('description');
+            $table->string('summary')->nullable();
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Roles;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Rol;
+use Inertia\Inertia;
 
 class RolController extends Controller
 {
-    public function allRoles(Request $request)
+    public function tableRoles(Request $request)
     {
         if ($request->perPage > 0)
         {

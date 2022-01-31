@@ -8,30 +8,45 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div class="flex justify-between h-16">
                             <div class="flex">
-                                <!-- Logo -->
-                            
+                                <!-- Link Panel administrator -->
                                 <v-row class="flex-shrink-0 flex items-center">
-                                    <inertia-link :href="route('dashboard')">
-                                        <v-img :src="'/img/settings.png'" width="55" class="ml-10"></v-img>
-                                    </inertia-link>
+                                   <div class="hidden space-x-10 sm:-my-px sm:flex flex justify-center" v-if="$page.props.user.rol_id === 1">
+                                        <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                                            <v-btn
+                                                class="ma-2 white--text"
+                                                color="secondary"
+                                                title="Panel de configuración."
+                                                >
+                                                <v-icon class="mr-1">
+                                                mdi-newspaper
+                                                </v-icon>
+                                                Análisis
+                                            </v-btn>
+                                        </jet-nav-link>
+                                    </div> 
+                                     <div class="hidden space-x-3 sm:-my-px sm:flex ml-5" v-if="$page.props.user.rol_id === 2">
+                                        <inertia-link :href="route('publications')">
+                                            <v-img :src="$page.props.user.profile_photo_url" width="50" color="primary"  style="border-radius:50px;"></v-img>
+                                        </inertia-link>
+                                          <span class="mt-3"><b>{{ $page.props.user.name }}</b></span>
+                                    </div> 
                                 </v-row>
-                        
                                 <!-- Navigation Links -->
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="$page.props.user.rol_id === 1">
                                     <jet-nav-link :href="route('roles')" :active="route().current('dashboard')">
                                         <div class="block px-4 py-2 text-xs text-dark-400">
                                         <span><b>Roles</b></span>
                                         </div>
                                     </jet-nav-link>
                                 </div>
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="$page.props.user.rol_id === 1">
                                     <jet-nav-link :href="route('users')" :active="route().current('dashboard')">
                                         <div class="block px-4 py-2 text-xs text-dark-400">
                                         <span><b>Usuarios</b></span>
                                         </div>
                                     </jet-nav-link>
                                 </div>
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" v-if="$page.props.user.rol_id === 1">
                                     <jet-nav-link :href="route('categories')" :active="route().current('dashboard')">
                                         <div class="block px-4 py-2 text-xs text-dark-400">
                                         <span><b>categorías</b></span>
@@ -43,21 +58,6 @@
                                         <div class="block px-4 py-2 text-xs text-dark-400">
                                         <span><b>Publicaciones</b></span>
                                         </div>
-                                    </jet-nav-link>
-                                </div>
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                    <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                        <v-btn
-                                            class="mx-4"
-                                            fab
-                                            medium
-                                            color="#303030"
-                                            title="Panel de configuración."
-                                            >
-                                            <v-icon color="#FFFFFF">
-                                                mdi-cog-transfer
-                                            </v-icon>
-                                        </v-btn>
                                     </jet-nav-link>
                                 </div>
                             </div>
@@ -122,29 +122,32 @@
                                 <div class="ml-3 relative">
                                     <jet-dropdown align="right" width="48">
                                         <template #trigger>
-                                            <button v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
-                                                <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
-                                            </button>
-
-                                            <span v-else class="inline-flex rounded-md">
-                                                <button type="button" class="inline-flex ml-6 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                <b>{{ $page.props.user.name }}</b>
-
+                                            <span v-if="$page.props.jetstream.managesProfilePhotos" class="flex text-sm border-2 rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
+                                                <button>
+                                                    <img class="h-8 w-8 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
+                                                </button>
+                                                <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                                    <b>{{ $page.props.user.name }}</b>
                                                     <svg class="-mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                                     </svg>
                                                 </button>
+                                            </span>
+                                            <span v-else class="inline-flex rounded-md">
+                                                <inertia-link :href="route('dashboard')">
+                                                    <v-img :src="$page.props.user.profile_photo_url" width="50" color="primary"  style="border-radius:50px;"></v-img>
+                                                </inertia-link>
                                             </span>
                                         </template>
 
                                         <template #content>
                                             <!-- Account Management -->
                                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                                Manage Account
+                                                Opciones
                                             </div>
 
                                             <jet-dropdown-link :href="route('profile.show')">
-                                                Profile
+                                                Perfil
                                             </jet-dropdown-link>
 
                                             <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
@@ -190,7 +193,6 @@
                                 <div v-if="$page.props.jetstream.managesProfilePhotos" class="flex-shrink-0 mr-3" >
                                     <img class="h-10 w-10 rounded-full object-cover" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
                                 </div>
-
                                 <div>
                                     <div class="font-medium text-base text-gray-800">{{ $page.props.user.name }}</div>
                                     <div class="font-medium text-sm text-gray-500">{{ $page.props.user.email }}</div>
@@ -199,7 +201,7 @@
 
                             <div class="mt-3 space-y-1">
                                 <jet-responsive-nav-link :href="route('profile.show')" :active="route().current('profile.show')">
-                                    Profile
+                                    Perfil
                                 </jet-responsive-nav-link>
 
                                 <jet-responsive-nav-link :href="route('api-tokens.index')" :active="route().current('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">

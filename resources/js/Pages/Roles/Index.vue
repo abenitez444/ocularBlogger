@@ -1,61 +1,60 @@
 <template>
-<app-layout>
-  <v-container
-    id="dashboard"
-    fluid
-    tag="section">
-    <v-row class="justify-center">
-      <v-col cols="12" md="8">
-        <v-col cols="12" md="12">
-          <v-form
-            ref="form"
-            v-model="form.valid"
-            lazy-validation>
-            <data-table-crud
-              title="Roles"
-              :items="roles"
-              :headers="headers"
-              :total="total"
-              :form="form"
-              @getData="allRol"
-              @save="saveRol"
-              @edit="editRol"
-              @delete="deleteRol"
-              ref="dataTable">
-              <template v-slot:formContainer>
-                <v-row justify="center">
+  <app-layout>
+    <v-container
+      id="dashboard"
+      fluid
+      tag="section">
+      <v-row class="justify-center">
+        <v-col cols="12" md="8">
+          <v-col cols="12" md="12">
+            <v-form
+              ref="form"
+              v-model="form.valid"
+              lazy-validation>
+              <data-table-crud
+                title="Roles"
+                :items="roles"
+                :headers="headers"
+                :total="total"
+                :form="form"
+                @getData="tableRoles"
+                @save="saveRol"
+                @edit="editRol"
+                @delete="deleteRol"
+                ref="dataTable">
+                <template v-slot:formContainer>
+                  <v-row justify="center">
+                      <v-col cols="12" md="8">
+                          <v-text-field
+                            v-model="form.name"
+                            :rules="validateRoles.rolesRules"
+                            label="Nombre del rol"
+                            max="20"
+                            min="3">
+                          </v-text-field>
+                      </v-col>
+                  </v-row>
+                  <v-row justify="center">
                     <v-col cols="12" md="8">
-                        <v-text-field
-                          v-model="form.name"
-                          :rules="validateRoles.rolesRules"
-                          label="Nombre del rol"
-                          max="20"
-                          min="3">
-                        </v-text-field>
+                      <v-text-field
+                        v-model="form.description"
+                        :rules="validateRoles.descriptionRules"
+                        :counter="max"
+                        label="Descripción"
+                        max="50"
+                        min="3">
+                      </v-text-field>
                     </v-col>
-                </v-row>
-                <v-row justify="center">
-                  <v-col cols="12" md="8">
-                    <v-text-field
-                      v-model="form.description"
-                      :rules="validateRoles.descriptionRules"
-                      :counter="max"
-                      label="Descripción"
-                      max="50"
-                      min="3">
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-              </template>
-            </data-table-crud>
-          </v-form>
+                  </v-row>
+                </template>
+              </data-table-crud>
+            </v-form>
+          </v-col>
         </v-col>
-      </v-col>
-    </v-row>
-  </v-container>
-</app-layout>
+      </v-row>
+    </v-container>
+  </app-layout>
 </template>
-
 <script>
 import AppLayout from '@/Layouts/AppLayout'
 import DataTableCrud from '@/Components/data-table-crud'
@@ -107,11 +106,11 @@ export default {
     }
   },
   methods: {
-    allRol(options)
+    tableRoles(options)
     {
       this.$refs.dataTable.loading = true;
       this.filter.perPage = options.itemsPerPage;
-      axios.post(route('allRol', {
+      axios.post(route('table.rol', {
         page: options.page,
       }), this.filter)
       .then((response) => {
@@ -130,24 +129,17 @@ export default {
     },
     saveRol() {
       if(this.$refs.form.validate()) {
-          axios.post(route('saveRol'), this.form)
+        axios.post(this.route('save.rol'), this.form)
         .then(() => {
           this.$swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Solicitud realizada exitosamente.',
           showConfirmButton: false,
-          timer: 3000
+          timer: 1500
         })
-          this.allRol(this.$refs.dataTable.options);
+          this.tableRoles(this.$refs.dataTable.options);
           this.$refs.dataTable.dialog = false;
-        })
-          this.$swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: 'Solicitud realizada exitosamente.',
-          showConfirmButton: false,
-          timer: 3000
         })
       }else {
           this.$toast.open({
@@ -163,7 +155,7 @@ export default {
       this.form = rol;
     },
     deleteRol(item) {
-      axios.delete(route('deleteRol', {
+      axios.delete(route('delete.roles', {
           id: item.id
       }))
       .then(() => {
@@ -174,7 +166,7 @@ export default {
             showConfirmButton: false,
             timer: 1500
         })
-        this.allRol(this.$refs.dataTable.options);
+        this.tableRoles(this.$refs.dataTable.options);
       })
     }
   }

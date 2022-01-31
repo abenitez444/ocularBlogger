@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function allCategories(Request $request)
+    public function tableCategories(Request $request)
     {
         if ($request->perPage > 0)
         {

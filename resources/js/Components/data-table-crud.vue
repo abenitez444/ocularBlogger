@@ -33,7 +33,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              color="secondary"
+              color="primary"
               dark
               class="mt-4"
               v-bind="attrs"
@@ -41,10 +41,10 @@
               small
               rounded
             >
-            <v-icon color="primary" left>
-              mdi-plus
+            <v-icon left>
+                mdi-label
             </v-icon>
-              Registrar
+            Nueva
             </v-btn>
           </template>
           <v-card>
@@ -89,33 +89,39 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn
-       class="mx-2"
-       fab
-       dark
-       small
-       color="cyan"
-       title="Editar categoría."
-      >
-        <v-icon  
+    <v-row> 
+      <v-col cols="12" class="flex"> 
+        <v-btn
+        class="mx-2"
+        fab
+        dark
         small
-        @click="editItem(item)" dark>
-        mdi-pencil
-        </v-icon>
-      </v-btn>
-      <v-btn
-       fab
-       dark
-       small
-       color="#EE220A"
-       title="Eliminar categoría."
-      >
-        <v-icon  
+        color="cyan"
+        >
+          <v-icon  
+          small
+          @click="editItem(item)" dark>
+          mdi-pencil
+          </v-icon>
+        </v-btn>
+        <v-btn
+        fab
+        dark
         small
-        @click="deleteItem(item)" dark>
-        mdi-delete
-        </v-icon>
-      </v-btn>
+        color="#EE220A"
+        title="Eliminar categoría."
+        v-if="$page.props.user.rol_id === 1"
+        >
+        <v-icon  
+          small
+          @click="deleteItem(item)" 
+          dark
+          >
+          mdi-delete
+          </v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
     </template>
     <template v-slot:no-data>
       <h6 class="h6">Sin datos</h6>

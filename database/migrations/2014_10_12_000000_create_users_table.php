@@ -21,8 +21,11 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
+            $table->foreignId('rol_id')->nullable();
             $table->string('avatar_admin')->nullable();
             $table->timestamps();
+
+            $table->foreign('rol_id')->references('id')->on('users');
         });
     }
 
