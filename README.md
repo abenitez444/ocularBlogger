@@ -17,6 +17,6 @@ INSTRUCCIONES:
 9) Ejecutamos el servidor con php artisan serve.
 10) Accedemos a la url localhost:8000/miblog/admin.
 11) Existen 2 usuarios cargados por default.
-12) Usuario: admin@gmail.com contraseña: invitado@gmail.com  | invitado@gmail.com constraseña: invitado2
+12) Usuario: admin@gmail.com contraseña: admin1  | invitado@gmail.com constraseña: invitado2
 
 Luego visualizar el blog a su preferencia.
