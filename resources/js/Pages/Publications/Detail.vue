@@ -1,108 +1,67 @@
 <template>
 <app-layout>
-<v-card class="mx-auto" max-width="100%">
-    <v-container>
-      <v-row class="justify-center mt-10">
-        <v-col cols="12" sm="6" md="9" lg="9">
-        <v-row>
-          <v-col cols="12" md="12" lg="12">
-            <h1 class="mb-5"><v-icon size="50" class="mr-2" color="secondary">mdi-clipboard-text-multiple</v-icon>{{data.person_data.fullname}}</h1>
-          </v-col>
-        </v-row>
-          <v-row>
-              <v-col cols="12" md="12" lg="12" class="text-center">
-                <v-avatar
-                  size="130"
-                  color="grey"
-                >
-                  <v-img :src="previewImage"></v-img>
-                </v-avatar>
-              </v-col>
+  <v-row  class=" mt-2">
+    <v-col cols="12" md="8" lg="8" class="flex justify-center offset-2">
+         <v-card elevation="2">
+            <v-row>
+                <v-col cols="12" md="6" lg="6">
+                    <v-btn class="mt-5 ml-5" color="info" @click="back">
+                        <v-icon>mdi-arrow-left-bold-hexagon-outline</v-icon> Regresar  
+                    </v-btn>
+                </v-col>
+            </v-row> 
+            <v-row> 
+                <v-col cols="12" md="5" lg="5">
+                    <v-img :src="previewImage" class="mt-5 ml-5" max-width="500" style="border-radius:10px;"></v-img>
+                </v-col>
+                 <v-col cols="12" md="7">
+                    <v-card-title>
+                        <h1>{{data.title}}</h1>
+                    </v-card-title>
+                    <v-card-title>
+                     <p class="font-weight-bold subtitle-2"><v-icon color="secondary">mdi-tooltip-text</v-icon> Descripción de publicación</p>
+                     </v-card-title>
+                      <v-card-text>
+                      {{data.description}}  
+                      </v-card-text>
+                    <p class="font-weight-bold subtitle-2 m-4"><v-icon color="secondary">mdi-calendar-text</v-icon> Resumen </p>
+                        <v-card-text>
+                        {{data.summary}}
+                         </v-card-text>
+                 </v-col>
             </v-row>
+        <v-card-text>
         <v-row>
-          <v-col cols="12" sm="4" md="6" lg="6">
-            <h3 class="font-weight-black">
-              Contacto
-            </h3>
-          </v-col>
+            <v-col cols="12" sm="4" md="6" lg="6">
+             <p class="font-weight-bold subtitle-2"><v-icon color="secondary">mdi-account-outline</v-icon> Autor</p>
+                {{data.author.name}}
+            </v-col>
+            <v-col cols="12" sm="4" md="6" lg="6">
+            <p class="font-weight-bold subtitle-2" style="margin-left:-50px;"><v-icon color="secondary">mdi-calendar-text</v-icon> Fecha y Hora </p>
+                <span style="margin-left:-50px;"> {{data.created_at}}</span>
+             </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" md="4" lg="4">
-              <p class="font-weight-bold subtitle-2"><v-icon color="secondary">mdi-email</v-icon> Correo electrónico</p>
-              
-          </v-col>
-          <v-col cols="12" md="4" lg="4" class="mb-5">
-              <p class="font-weight-bold subtitle-2"><v-icon color="secondary">mdi-cellphone-iphone</v-icon> Teléfono de contacto</p>
-             
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="4" md="6" lg="6">
-            <h3 class="font-weight-black">
-              Datos personales
-            </h3>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col cols="12" sm="4" md="12" lg="12">
-            <h3 class="font-weight-black mb-1">
-              Expectativa salarial
-            </h3>
-          </v-col>
-        </v-row>
-        <v-row class="mb-5">
-          <v-col cols="12" sm="8" md="12" lg="12">
-               
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="4" md="12" lg="12">
-            <h3 class="font-weight-black mb-3">
-              Educación
-            </h3>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="4" md="6" lg="6">
-            <h3 class="font-weight-black mb-3">
-              Experiencia laboral
-            </h3>
-          </v-col>
-        </v-row>
-      <v-row>
-        <v-col
-          cols="12"
-          md="12"
-          lg="12"
-          class="text-center mb-6">
-            <v-btn color="secondary" class="font-weight-bold" @click="back" rounded>
-              Cerrar
-            </v-btn>
-          </v-col>
-      </v-row>
-  </v-container>
-</v-card>
-</app-layout>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+  </app-layout>
 </template>
+
 
 <script>
 import AppLayout from '@/Layouts/AppLayout'
 
+
 export default {
-    components: {
-      AppLayout,
-    },
-    props:['data'],
+     components: {
+        AppLayout,
+  },      
+  props:['data', 'index'],
     data: () => ({
       previewImage:''
    }),
-   mounted(){
-     if(!this.data.image){
-       this.previewImage ='/img/setting.png';
-     }
-   },
    created () {
-     this.data.publication = this.data.publication ? this.data.publication : [];
      this.previewImage = this.data.image ? this.data.image : null;
    },
    methods: {
@@ -110,5 +69,6 @@ export default {
       window.history.back();
     }
    },
+ 
 }
 </script>

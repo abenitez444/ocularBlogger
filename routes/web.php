@@ -56,10 +56,13 @@ use App\Http\Controllers\Permission\PermissionController;
         /** ==== Publications ==== **/
         Route::post('get-publications',[PublicationController::Class,'tablePublications'])->name('table.publication');
         Route::get('select/categories',[PublicationController::Class,'selectCategories'])->name('select.category');
+        Route::get('create/publication',[PublicationController::Class,'create'])->name('create.publication');
         Route::post('save',[PublicationController::Class,'savePublications'])->name('save.publication');
-        Route::get('/detail/{id}', [PublicationController::Class,'showDetail'])->name('show.publication');
+        Route::get('/edit/{id}', [PublicationController::Class,'edit'])->name('edit');
+        Route::get('/detail/publications/{id}', [PublicationController::Class,'detailPublications'])->name('show.detail');
         Route::post('/image/upload', [PublicationController::class, 'uploadImages'])->name('upload.image');
-      
+        Route::delete('/delete/publication/{id}',[PublicationController::Class,'deletePublication'])->name('delete.publication');
+        
     });
     /**===================================**/
 

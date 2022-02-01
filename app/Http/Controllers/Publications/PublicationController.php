@@ -24,6 +24,12 @@ class PublicationController extends Controller
         }
         return response()->json($data);
     }
+    public function create(){
+        
+       return Inertia::render('Publications/Save');
+
+    }
+    
     public function selectCategories(Request $request)
     {
         if ($request->perPage > 0)
@@ -73,13 +79,20 @@ class PublicationController extends Controller
             throw $th;
         }
     }
-    public function showDetail($id)
+    public function detailPublications($id)
     {
         $publicationData = Publication::with('category', 'author')
-        ->where('publication.id', $id)->first();
+        ->where('publications.user_id', $id)->first();
           
-           $data = ['data'=>$publicationData];
+            $data = ['data'=>$publicationData];
 
-           return Inertia::render('Publications/Detail',$data);
+           return Inertia::render('Publications/Detail', $data);
+    }
+    public function deletePublication($id)
+    {
+        $client = Publication::find($id);
+        $client->delete();
+
+        return Inertia::render('Publication/Index');
     }
 }
