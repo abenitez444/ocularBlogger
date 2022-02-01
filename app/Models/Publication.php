@@ -16,7 +16,7 @@ class Publication extends Model
     protected $table = 'publications';
     protected $dates = ['deleted_at'];
     protected $casts = [
-      'created_at' => "datetime:d-m-Y / h:i a",
+      'created_at' => "datetime:d-m-Y /h:i A h:i a",
     ];
     
     protected $fillable = [

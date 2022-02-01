@@ -69,17 +69,7 @@
             ref="form"
             v-model="form.valid"
             lazy-validation>
-            <data-table-crud
-              title="Publicaciones"
-              item-key="name"
-              :items="publications"
-              :headers="headers"
-              :total="total"
-              :form="form"
-              @getData="tablePublications"
-              @save="savePublications"
-              @delete="deletePublications"
-              ref="dataTable">
+          
               <template v-slot:formContainer>
                <form enctype="multipart/form-data" id="formImg">
                   <v-row>
@@ -166,7 +156,6 @@
                   </v-col>
                 </v-row>
               </template>
-            </data-table-crud>
           </v-form>
         </v-col>
     </v-row>

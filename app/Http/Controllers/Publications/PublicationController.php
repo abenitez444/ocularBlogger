@@ -16,20 +16,15 @@ class PublicationController extends Controller
     {
         if ($request->perPage > 0)
         {   
-            $data = Publication::with('category', 'author')->whereDate('created_at', date('Y-m-d'))->paginate($request->perPage);
+            $data = Publication::with('category', 'author')->orderBy('created_at', 'desc')->paginate($request->perPage);
         }
         else
         {
-            $data = Publication::with('category')->orderBy('created_at', 'desc')->with('category')->get(); 
+            $data = Publication::with('category', 'author')->orderBy('created_at', 'desc')->get(); 
         }
         return response()->json($data);
     }
-    public function create(){
-        
-       return Inertia::render('Publications/Save');
-
-    }
-    
+   
     public function selectCategories(Request $request)
     {
         if ($request->perPage > 0)
@@ -86,7 +81,7 @@ class PublicationController extends Controller
           
             $data = ['data'=>$publicationData];
 
-           return Inertia::render('Publications/Detail', $data);
+            return Inertia::render('Publications/Detail', $data);
     }
     public function deletePublication($id)
     {

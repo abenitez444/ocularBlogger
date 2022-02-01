@@ -5,7 +5,7 @@
     fluid
     tag="section">
     <v-row class="justify-center">
-      <v-col cols="12" md="4" lg="4">
+      <v-col cols="12" md="3" lg="3">
         <template>
         <v-card
           elevation="20"
@@ -64,89 +64,111 @@
         </v-card>
       </template>
       </v-col>
-        <v-col cols="12" md="8" lg="8">
-            <v-data-table
-            :headers="headers"
-            :items="publications"
-            :options.sync="options"
-            :server-items-length="total"
-            :loading="loading"
-            class="elevation-10"
-          >
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-col cols="12" class="flex"> 
-               <v-btn
-                color="secondary"
-                class="ma-1 white--text"
-                small
-                @click="saveRedirect(item)" 
-                >
-                  Nueva
-                  <v-icon
-                    right
-                    dark
-                  >
-                    mdi-plus
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                color="primary"
-                class="ma-1 white--text"
-                small
-                @click="detailItem(item)" 
-                >
-                  Ver
-                  <v-icon
-                    right
-                    dark
-                  >
-                    mdi-gesture-swipe-up
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                  color="indigo"
-                  class="ma-1 white--text"
-                  small
-                  @click="editItem(item)"  
-                >
-                Editar
-                  <v-icon
-                    right
-                    dark
-                  >
-                    mdi-tooltip-edit
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                fab
-                dark
-                small
-                color="#EE220A"
-                title="Eliminar categoría."
-                v-if="$page.props.user.rol_id === 1"
-                >
-                <v-icon  
-                  small
-                  @click="deleteItem(item)" 
-                  dark
-                  >
-                  mdi-delete
-                  </v-icon>
-                </v-btn>
-              </v-col>
-            </template>
-          </v-data-table>
-           <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5">¿Estas seguro que deseas eliminar?</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="dialogDelete = false">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">Aceptar</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+        <v-col cols="12" md="9" lg="9">
+          <v-form
+            ref="form"
+            v-model="form.valid"
+            lazy-validation>
+            <data-table-crud
+              title="Publicaciones"
+              item-key="name"
+              :items="publications"
+              :headers="headers"
+              :total="total"
+              :form="form"
+              @getData="tablePublications"
+              @save="savePublications"
+              @edit="editPublication"
+              @delete="deletePublications"
+              ref="dataTable">
+              <template v-slot:formContainer>
+               <form enctype="multipart/form-data" id="formImg">
+                  <v-row>
+                    <v-img
+                    height="50%"
+                    :src="previewImage"
+                    class="mx-auto"
+                    max-width="200">
+                    <v-row
+                      align="end"
+                      class="fill-height">
+                        <v-col
+                        align-self="start"
+                        class="pa-0"
+                        cols="12"
+                        >
+                        </v-col>
+                        <v-col class="py-0">
+                          <v-list-item
+                            color="#FFEB42"
+                            dark
+                          >
+                          </v-list-item>
+                        </v-col>
+                      </v-row>
+                     </v-img>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12" md="8" lg="8" class="offset-2 mb-4">
+                            <v-file-input
+                                accept="image/png, image/jpeg, image/bmp"
+                                placeholder="Cargar imagen"
+                                prepend-icon="mdi-camera"
+                                label="Cargar imagen"
+                                type="file"
+                                @change="setImage"
+                            ></v-file-input>
+                        </v-col>
+                    </v-row>
+                </form>
+                <v-row justify="center">
+                    <v-col cols="12" md="10" lg="10">
+                        <v-text-field
+                          v-model="form.title"
+                          :rules="validate.titleRules"
+                          label="Título"
+                          required
+                          solo
+                          >
+                        </v-text-field>
+                    </v-col>
+                  <v-col cols="12" md="10" class="mb-2">
+                    <v-autocomplete
+                        v-model="form.category_id"
+                        placeholder="Categorías"
+                        :items="categories"
+                        :rules="validate.selectCategory"
+                        item-value="id"
+                        item-text="name"
+                        solo
+                        required
+                        >
+                    </v-autocomplete>
+                  </v-col>
+                  <v-col cols="12" md="10">
+                    <v-text-field
+                        v-model="form.summary"
+                        :rules="validate.summaryRules"
+                        name="input-7-4"
+                        label="Resumen de publicación"
+                        solo
+                        >
+                    </v-text-field>
+                  </v-col>
+                   <v-col cols="12" md="10">
+                    <v-textarea
+                        v-model="form.description"
+                        name="input-7-4"
+                        label="Descripción general"
+                        :counter="max"
+                        solo
+                        >
+                    </v-textarea>
+                  </v-col>
+                </v-row>
+              </template>
+            </data-table-crud>
+          </v-form>
         </v-col>
     </v-row>
   </v-container>
@@ -155,13 +177,12 @@
 
 <script>
 import AppLayout from '@/Layouts/AppLayout'
-import DetailPublic from '@/Pages/Publications/Detail'
-
+import DataTableCrud from '@/Components/data-table-crud'
 
 export default {
     components: {
         AppLayout,
-        DetailPublic,
+        DataTableCrud
     },
     data() {
         return {
@@ -183,11 +204,8 @@ export default {
             image:'',
             loading: true,
             data: {},
-            options: {},
             total: 0,
             max: 0,
-            dialogDetail: false,
-            dialogDelete:false,
             categories:[],
             publications:[],
               form:{
@@ -198,30 +216,30 @@ export default {
                 valid: true
             },
             headers: [{
-                text: 'Titulo',
-                value: 'title',
-                sortable: false
+                  text: 'Titulo',
+                  value: 'title',
+                  sortable: true
                 },
                 {
                     text: 'Autor',
                     value: 'author.name',
-                    sortable: false
+                    sortable: true
                 },
                 {
                     text: 'Categoría',
                     value: 'category.name',
-                    sortable: false
+                    sortable: true
                 },
                 {
-                    text: 'Fecha de publicación',
+                    text: 'Fecha y hora',
                     value: 'created_at',
-                    sortable: false
+                    sortable: true
                 },
                 {
                     text: 'Opciones',
                     value: 'actions',
-                    sortable: false
-                },
+                    sortable: true
+                }
             ],
             filter: {
                 search: '',
@@ -245,55 +263,33 @@ export default {
     },
     mounted(){
     // Image of publication for default //
-      if(!this.previewImage) this.previewImage = '/img/settings.png';
-    
-      this.selectCategories();
-    },
-    watch: {
-      options: {
-        handler () {
-          this.tablePublications()
-        },
-        deep: true,
-      }, 
-    },
-    methods: {
-        saveRedirect(item)
-        {
-           this.$inertia.visit(route('create.publication'), 
-          {
-            method: 'get'
-          })
-        },
+     
+     if(!this.previewImage) this.previewImage = '/img/settings.png';
 
+     this.selectCategories();
+      
+    },
+   
+    methods: {
         tablePublications(options)
         {
-          this.loading = true;
-          this.publications =  [];
-          this.filter.perPage = this.options.itemsPerPage;
+          this.$refs.dataTable.loading = true;
+          this.filter.perPage = options.itemsPerPage;
           axios.post(route('table.publication', {
-            page: this.options.page,
+            page: options.page,
           }), this.filter)
-          .then( (response) => {
-            this.publications =  response.data.data;
-            this.loading = false;
-            this.total = response.data.total;
-          })
-        },
-        detailItem(item)
-        {
-          this.$inertia.visit(route('show.detail', {id:item.user_id}), 
-          {
-            method: 'get'
-          })
-          
-        },
-        editItem(item)
-        {
-          this.$inertia.visit(route(
-            'edit', {id:item.id}), 
+          .then((response) => {
+            if(this.filter.perPage > 0)
             {
-              method: 'get'
+              this.publications =  response.data.data;
+              this.total = response.data.total;
+            }
+            else
+            {
+              this.publications =  response.data;
+              this.total = response.data.length;
+            }
+              this.$refs.dataTable.loading = false;
           })
         },
         selectCategories(){
@@ -321,6 +317,11 @@ export default {
             }
           }
           this.$inertia.post(route('upload.image'), formImg, config);
+        },
+        editPublication(publication)
+        {
+          this.$refs.form.resetValidation()
+          this.form = publication;
         },
         savePublications() {
           
@@ -357,21 +358,22 @@ export default {
             });
           }
         },
-        deleteItemConfirm (deleted) {
-          this.dialogDelete = false
-          var deleted = this.editedItem; 
-          axios.delete(route('delete.publication', {id : deleted.id} ))
-          .then(() => {
-            this.$swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'El registro se eliminó exitosamente.',
-              showConfirmButton: false,
-              timer: 3000
+        deletePublications(item) {
+          axios.delete(route('delete.publication', {
+                id: item.id
+            }))
+            .then(() => {
+                this.$swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'El registro se eliminó exitosamente.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                location.reload()
+                this.selectCategories(this.$refs.dataTable.options);
             })
-            this.getClients()
-          })
-      }
+        }
     }
 }
 </script>
