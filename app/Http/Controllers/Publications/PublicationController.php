@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Publications;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Publication;
 use App\Models\User;
@@ -13,14 +14,25 @@ use Carbon\Carbon;
 class PublicationController extends Controller
 {   
     public function tablePublications(Request $request)
-    {
+    {   
+        $data = Publication::select(
+            'publications.id',
+            'publications.title',
+            'publications.image',
+            'publications.user_id',
+            'publications.category_id',
+            'publications.description',
+            'publications.created_at',
+            'publications.summary'
+          );
+
         if ($request->perPage > 0)
         {   
-            $data = Publication::with('category', 'author')->orderBy('created_at', 'desc')->paginate($request->perPage);
+            $data = $data->with('category', 'author')->orderBy('created_at', 'desc')->paginate($request->perPage);
         }
         else
         {
-            $data = Publication::with('category', 'author')->orderBy('created_at', 'desc')->get(); 
+            $data = $data->with('category', 'author')->orderBy('created_at', 'desc')->get(); 
         }
         return response()->json($data);
     }

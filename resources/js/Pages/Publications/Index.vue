@@ -29,12 +29,10 @@
               </v-chip>
             </v-card-actions>
             <v-carousel-item
-              v-for="(slide, i) in slides"
-              :key="i"
+              v-for="item in publications"
             >
-              <v-img :src="previewImage"></v-img>
+              <v-img :src="item.image"></v-img>
               <v-sheet
-                :color="colors[i]"
                 height="100%"
                 tile
               >
@@ -44,7 +42,7 @@
                   justify="center"
                 >
                   <div class="text-h2">
-                    {{ slide }} 
+                   
                   </div>
                 </v-row>
               </v-sheet>
@@ -186,13 +184,6 @@ export default {
     },
     data() {
         return {
-           colors: [
-            'indigo',
-            'warning',
-            'pink darken-2',
-            'red lighten-1',
-            'deep-purple accent-4',
-            ],
             slides: [
               'First',
               'Second',
@@ -203,7 +194,6 @@ export default {
             previewImage:'',
             image:'',
             loading: true,
-            data: {},
             total: 0,
             max: 0,
             categories:[],
@@ -215,7 +205,8 @@ export default {
                 description:'',
                 valid: true
             },
-            headers: [{
+            headers: [
+                {
                   text: 'Titulo',
                   value: 'title',
                   sortable: true
@@ -264,10 +255,10 @@ export default {
     mounted(){
     // Image of publication for default //
      
-     if(!this.previewImage) this.previewImage = '/img/settings.png';
-
-     this.selectCategories();
-      
+    if(!this.previewImage) this.previewImage = '/img/settings.png';
+    console.log(this.data)
+    this.selectCategories();
+  
     },
    
     methods: {
